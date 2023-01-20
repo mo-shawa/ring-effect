@@ -41,7 +41,6 @@ const camera = new THREE.PerspectiveCamera(
 
 camera.position.x = 0
 camera.position.y = 1.5
-camera.position.z = 3
 scene.add(camera)
 
 // Canvas
@@ -113,18 +112,19 @@ pointsGeometry.setAttribute("aScale", new THREE.BufferAttribute(scales, 1))
  * Shader Material
  */
 
-const pointsShader = new THREE.ShaderMaterial({
+const pointsMaterial = new THREE.ShaderMaterial({
 	depthWrite: false,
 	blending: THREE.AdditiveBlending,
 	vertexColors: true,
 	vertexShader: vertexShader,
 	fragmentShader: fragmentShader,
 	uniforms: {
+		uTime: { value: 0 },
 		uSize: { value: 8 * renderer.getPixelRatio() },
 	},
 })
 
-const points = new THREE.Points(pointsGeometry, pointsShader)
+const points = new THREE.Points(pointsGeometry, pointsMaterial)
 camera.lookAt(points.position)
 
 scene.add(points)
@@ -136,12 +136,12 @@ scene.add(points)
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableDamping = true
 
-// const clock = new THREE.Clock()
+const clock = new THREE.Clock()
 
 const tick = () => {
-	// const elapsedTime = clock.getElapsedTime()
-	// points.rotation.z = Math.sin(elapsedTime) / 200
-	// points.rotation.y += 1 / 5000
+	const elapsedTime = clock.getElapsedTime()
+
+	pointsMaterial.uniforms.uTime.value = 500 + elapsedTime / 8
 
 	controls.update()
 
