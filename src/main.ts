@@ -33,14 +33,12 @@ window.addEventListener("resize", () => {
  */
 
 const camera = new THREE.PerspectiveCamera(
-	75,
+	55,
 	sizes.width / sizes.height,
-	0.0001,
+	0.1,
 	100
 )
-
-camera.position.x = 0
-camera.position.y = 1.5
+camera.position.y = 6
 scene.add(camera)
 
 // Canvas
@@ -48,20 +46,23 @@ scene.add(camera)
 /**
  * Renderer
  */
-const renderer = new THREE.WebGLRenderer()
+const renderer = new THREE.WebGLRenderer({
+	alpha: true,
+})
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.setClearColor("rgb(41, 41, 41)")
 document.body.append(renderer.domElement)
 
 const parameters = {
-	count: 200000,
+	count: 10000000,
 	size: 0.005,
 	radius: 5,
 	branches: 5,
 	spin: 1,
 	randomness: 0.5,
-	insideColor: "#ff8585",
-	outsideColor: "#141133",
+	insideColor: "#d7d369",
+	outsideColor: "#0e0606",
 }
 
 /**
@@ -88,7 +89,7 @@ for (let i = 0; i < parameters.count; i++) {
 	const randomZ = (Math.random() - 0.5) * parameters.randomness
 
 	positions[i3 + 0] = Math.cos(branchAngle) * radius + randomX
-	positions[i3 + 1] = Math.random() * 0.1 + randomY //
+	positions[i3 + 1] = Math.random() * 0.1 + randomY
 	positions[i3 + 2] = Math.sin(branchAngle) * radius + randomZ
 
 	const mixedColor = insideColor.clone()
@@ -101,8 +102,6 @@ for (let i = 0; i < parameters.count; i++) {
 
 	scales[i] = Math.random()
 }
-
-// console.log(colors)
 
 pointsGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
 pointsGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3))
@@ -119,12 +118,14 @@ const pointsMaterial = new THREE.ShaderMaterial({
 	vertexShader: vertexShader,
 	fragmentShader: fragmentShader,
 	uniforms: {
-		uTime: { value: 0 },
-		uSize: { value: 8 * renderer.getPixelRatio() },
+		uTime: { value: 1000 },
+		uSize: { value: 3 * renderer.getPixelRatio() },
 	},
 })
 
 const points = new THREE.Points(pointsGeometry, pointsMaterial)
+points.rotateOnAxis(new THREE.Vector3(1, 0, 0), Math.PI / 4)
+points.position.x = 5
 camera.lookAt(points.position)
 
 scene.add(points)
@@ -147,7 +148,7 @@ const tick = () => {
 
 	renderer.render(scene, camera)
 
-	window.requestAnimationFrame(tick)
+	// window.requestAnimationFrame(tick)
 }
 
 tick()

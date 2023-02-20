@@ -7,6 +7,6 @@ void main() {
     strength = 1.0 - strength;
 
     // Final Color
-    vec3 color = mix(vec3(0.0), vColor, strength);
-    gl_FragColor = vec4(color, 1.0);
+    // vec3 color = mix(vec3(0.0), vColor, strength);
+    gl_FragColor = vec4(vColor, 1.0);
 }
