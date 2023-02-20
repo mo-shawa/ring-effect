@@ -51,11 +51,11 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-renderer.setClearColor("rgb(41, 41, 41)")
+renderer.setClearColor("rgb(255, 255, 255)")
 document.body.append(renderer.domElement)
 
 const parameters = {
-	count: 10000000,
+	count: 20000000,
 	size: 0.005,
 	radius: 5,
 	branches: 5,
@@ -113,7 +113,7 @@ pointsGeometry.setAttribute("aScale", new THREE.BufferAttribute(scales, 1))
 
 const pointsMaterial = new THREE.ShaderMaterial({
 	depthWrite: false,
-	blending: THREE.AdditiveBlending,
+	blending: THREE.SubtractiveBlending,
 	vertexColors: true,
 	vertexShader: vertexShader,
 	fragmentShader: fragmentShader,
@@ -148,7 +148,17 @@ const tick = () => {
 
 	renderer.render(scene, camera)
 
-	// window.requestAnimationFrame(tick)
+	window.requestAnimationFrame(tick)
 }
 
 tick()
+
+const overlay = document.createElement("div")
+overlay.style.cssText = `
+	position: absolute;
+	width: 100vw;
+	height: 100vh;
+	backdrop-filter: blur(15px);
+	color: red
+`
+document.body.append(overlay)
