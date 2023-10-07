@@ -156,9 +156,10 @@ tick()
 const overlay = document.createElement("div")
 overlay.style.cssText = `
 	position: absolute;
+	top: 0;
 	width: 100vw;
 	height: 100vh;
-	backdrop-filter: blur(15px);
+	backdrop-filter: blur(2px) hue-rotate(330deg);
 	color: red
 `
 document.body.append(overlay)
